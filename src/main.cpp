@@ -1,9 +1,9 @@
-#define SDL_MAIN_HANDLED
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
 
 SDL_Window* window;
 
-int main() {
+int main(int argc, char* argv[]) {
 
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -11,7 +11,7 @@ int main() {
         return 1;
     }
 
-    window = SDL_CreateWindow("Forth", 800, 600, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("Text Game", 800, 600, SDL_WINDOW_RESIZABLE);
     if (window == NULL) {
         SDL_Log("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         SDL_Quit();
