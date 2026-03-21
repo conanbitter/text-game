@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(utg VERSION 0.1 LANGUAGES C CXX)
+project(utg VERSION 0.1 LANGUAGES C CXX RC)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
@@ -46,6 +46,7 @@ list(TRANSFORM SRC_FILES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 add_executable(utg
     ${SRC_FILES}
     vendored/glad/src/gl.c
+    $<$<BOOL:${WIN32}>:res/resource.rc>
 )
 
 target_include_directories(utg PRIVATE 
@@ -55,5 +56,8 @@ target_include_directories(utg PRIVATE
 target_link_libraries(utg PRIVATE SDL3::SDL3)
 
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set_property(TARGET lfa PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+    set_target_properties(utg PROPERTIES
+        WIN32_EXECUTABLE TRUE
+        MSVC_RUNTIME_LIBRARY "MultiThreaded"
+    )
 endif()
