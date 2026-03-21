@@ -10,6 +10,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(SRC_FILES
     main.cpp
+
+    shaders.hpp
+    shaders.cpp
 )
 
 set(SDL_VULKAN OFF CACHE BOOL "" FORCE)

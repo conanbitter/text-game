@@ -2,10 +2,14 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
+#include "shaders.hpp"
+
 SDL_Window* window;
 SDL_GLContext context;
 
 int main(int argc, char* argv[]) {
+
+    loadFromFile("assets/basic.frag");
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
