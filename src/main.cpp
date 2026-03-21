@@ -40,6 +40,10 @@ int main(int argc, char* argv[]) {
     BasicShader shader;
     shader.init();
 
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
     bool quit = false;
     SDL_Event e;
     while (!quit) {
@@ -67,9 +71,10 @@ int main(int argc, char* argv[]) {
         }
 
         shader.use();
-
+        glBindVertexArray(vao);
         glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
         SDL_GL_SwapWindow(window);
 
         SDL_Delay(1);
