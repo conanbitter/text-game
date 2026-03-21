@@ -8,6 +8,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(SRC_FILES
+    main.cpp
+)
+
 set(SDL_VULKAN OFF CACHE BOOL "" FORCE)
 set(SDL_RENDER_VULKAN OFF CACHE BOOL "" FORCE)
 
@@ -37,8 +41,19 @@ set(SDL_RENDER_GPU OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
 
+list(TRANSFORM SRC_FILES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+
 add_executable(utg
-    src/main.cpp
+    ${SRC_FILES}
+    vendored/glad/src/gl.c
+)
+
+target_include_directories(utg PRIVATE 
+    vendored/glad/include
 )
 
 target_link_libraries(utg PRIVATE SDL3::SDL3)
+
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set_property(TARGET lfa PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+endif()
