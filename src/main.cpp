@@ -9,8 +9,6 @@ SDL_GLContext context;
 
 int main(int argc, char* argv[]) {
 
-    loadFromFile("assets/basic.frag");
-
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 1;
@@ -39,6 +37,9 @@ int main(int argc, char* argv[]) {
     int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
     SDL_Log("Using OpenGL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
+    BasicShader shader;
+    shader.init();
+
     bool quit = false;
     SDL_Event e;
     while (!quit) {
@@ -64,6 +65,8 @@ int main(int argc, char* argv[]) {
                 break;
             }
         }
+
+        shader.use();
 
         glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);

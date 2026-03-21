@@ -1,3 +1,19 @@
 #pragma once
+#include <glad/gl.h>
 
-void loadFromFile(const char* filename);
+class ShaderProgram {
+public:
+    void use();
+    virtual void init() {}
+
+    ~ShaderProgram();
+protected:
+    GLuint program = 0;
+    void loadFromString(const char* vertexShaderCode, const char* fragmentShaderCode);
+    void loadFromFiles(const char* vertexShaderFile, const char* fragmentShaderFile);
+};
+
+class BasicShader :public ShaderProgram {
+public:
+    void init() override;
+};
