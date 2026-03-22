@@ -13,6 +13,9 @@ set(SRC_FILES
 
     shaders.hpp
     shaders.cpp
+
+    textures.hpp
+    textures.cpp
 )
 
 set(SDL_VULKAN OFF CACHE BOOL "" FORCE)
@@ -54,6 +57,7 @@ add_executable(utg
 
 target_include_directories(utg PRIVATE 
     vendored/glad/include
+    vendored/stb
 )
 
 target_link_libraries(utg PRIVATE SDL3::SDL3)

@@ -3,6 +3,7 @@
 #include <SDL3/SDL_main.h>
 
 #include "shaders.hpp"
+#include "textures.hpp"
 
 SDL_Window* window;
 SDL_GLContext context;
@@ -37,8 +38,13 @@ int main(int argc, char* argv[]) {
     int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
     SDL_Log("Using OpenGL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     BasicShader shader;
     shader.init();
+    Texture texture;
+    texture.load("assets/bitmap_transparent.png");
 
     GLuint vao;
     glGenVertexArrays(1, &vao);
@@ -71,6 +77,7 @@ int main(int argc, char* argv[]) {
         }
 
         shader.use();
+        texture.bind();
         glBindVertexArray(vao);
         glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
