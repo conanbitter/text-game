@@ -126,4 +126,18 @@ void ShaderProgram::loadFromFiles(const char* vertexShaderFile, const char* frag
 
 void BasicShader::init() {
     loadFromFiles("assets/basic.vert", "assets/basic.frag");
+
+    glUseProgram(program);
+
+    GLint tex_location = glGetUniformLocation(program, "tex");
+    if (tex_location < 0) throw std::runtime_error("Can't find \"tex\" uniform in shaders");
+    glUniform1i(tex_location, 0);
+
+    GLint tbo_location = glGetUniformLocation(program, "spriteData");
+    if (tbo_location < 0) throw std::runtime_error("Can't find \"spriteData\" uniform in shaders");
+    glUniform1i(tbo_location, 1);
+
+    GLint scale_location = glGetUniformLocation(program, "scale");
+    if (scale_location < 0) throw std::runtime_error("Can't find \"scale\" uniform in shaders");
+    glUniform4f(scale_location, 0.0, 0.0, 1.0, 1.0);
 }

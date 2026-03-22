@@ -1,18 +1,30 @@
 #include <glad/gl.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <vector>
 
 #include "shaders.hpp"
 #include "textures.hpp"
 
+#pragma pack(push, 1)
+struct SpriteData {
+    float x;
+    float y;
+    float w;
+    float h;
+};
+#pragma pack(pop)
+
 SDL_Window* window;
 SDL_GLContext context;
 
-int main(int argc, char* argv[]) {
+std::vector<SpriteData> sprites;
+
+void run() {
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-        return 1;
+        return;
     }
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -24,7 +36,7 @@ int main(int argc, char* argv[]) {
     if (window == NULL) {
         SDL_Log("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         SDL_Quit();
-        return 1;
+        return;
     }
 
     context = SDL_GL_CreateContext(window);
@@ -32,7 +44,7 @@ int main(int argc, char* argv[]) {
         SDL_Log("Context could not be created! SDL_Error: %s\n", SDL_GetError());
         SDL_DestroyWindow(window);
         SDL_Quit();
-        return 1;
+        return;
     }
 
     int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
@@ -40,15 +52,33 @@ int main(int argc, char* argv[]) {
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_DEPTH_TEST);
 
     BasicShader shader;
     shader.init();
     Texture texture;
-    texture.load("assets/bitmap_transparent.png");
+    texture.load("assets/bitmap.png");
 
     GLuint vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
+
+    sprites.push_back(SpriteData{ .x = -0.7, .y = -0.7, .w = 0.5, .h = 0.5 });
+    sprites.push_back(SpriteData{ .x = -0.7, .y = 0.2, .w = 0.5, .h = 0.5 });
+    sprites.push_back(SpriteData{ .x = 0.2, .y = 0.2, .w = 0.5, .h = 0.5 });
+    sprites.push_back(SpriteData{ .x = 0.2, .y = -0.7, .w = 0.5, .h = 0.5 });
+    GLuint spriteBuffer;
+    glGenBuffers(1, &spriteBuffer);
+    glBindBuffer(GL_TEXTURE_BUFFER, spriteBuffer);
+    glBufferData(GL_TEXTURE_BUFFER, sizeof(SpriteData) * sprites.size(), sprites.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_TEXTURE_BUFFER, 0);
+    GLuint spriteTexture;
+    glGenTextures(1, &spriteTexture);
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_BUFFER, spriteTexture);
+    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32F, spriteBuffer);
+    glBindTexture(GL_TEXTURE_BUFFER, 0);
+
 
     bool quit = false;
     SDL_Event e;
@@ -76,12 +106,14 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        shader.use();
-        texture.bind();
         glBindVertexArray(vao);
+        texture.bind();
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_BUFFER, spriteTexture);
+        shader.use();
         glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLES, 0, 6 * sprites.size());
         SDL_GL_SwapWindow(window);
 
         SDL_Delay(1);
@@ -90,5 +122,14 @@ int main(int argc, char* argv[]) {
     SDL_GL_DestroyContext(context);
     SDL_DestroyWindow(window);
     SDL_Quit();
+}
+
+int main(int argc, char* argv[]) {
+    try {
+        run();
+    }
+    catch (const std::exception& e) {
+        SDL_Log(e.what());
+    }
     return 0;
 }

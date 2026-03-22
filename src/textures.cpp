@@ -30,6 +30,7 @@ void Texture::load(const char* filename) {
     }
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     stbi_image_free(data);
 
