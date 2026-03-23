@@ -25,6 +25,7 @@ uniform sampler2D tex;
 
 out vec2 fragUV;
 out float scale;
+out float thickness;
 
 void main() {
     int quadID = gl_VertexID / 6;
@@ -65,4 +66,5 @@ void main() {
     gl_Position = vec4(px, py, 0.0, 1);
     fragUV = vec2(u, v);
     scale = fd[0];
+    thickness = fd[1];
 }
