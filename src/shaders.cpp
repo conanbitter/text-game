@@ -129,15 +129,18 @@ void BasicShader::init() {
 
     glUseProgram(program);
 
-    GLint tex_location = glGetUniformLocation(program, "tex");
-    if (tex_location < 0) throw std::runtime_error("Can't find \"tex\" uniform in shaders");
-    glUniform1i(tex_location, 0);
+    GLint texUniform = glGetUniformLocation(program, "tex");
+    if (texUniform < 0) throw std::runtime_error("Can't find \"tex\" uniform in shaders");
+    glUniform1i(texUniform, 0);
 
-    GLint tbo_location = glGetUniformLocation(program, "spriteData");
-    if (tbo_location < 0) throw std::runtime_error("Can't find \"spriteData\" uniform in shaders");
-    glUniform1i(tbo_location, 1);
+    GLint tboUniform = glGetUniformLocation(program, "spriteData");
+    if (tboUniform < 0) throw std::runtime_error("Can't find \"spriteData\" uniform in shaders");
+    glUniform1i(tboUniform, 1);
 
-    GLint scale_location = glGetUniformLocation(program, "scale");
-    if (scale_location < 0) throw std::runtime_error("Can't find \"scale\" uniform in shaders");
-    glUniform4f(scale_location, 0.0, 0.0, 1.0, 1.0);
+    viewportUniform = glGetUniformLocation(program, "viewport");
+    if (viewportUniform < 0) throw std::runtime_error("Can't find \"viewport\" uniform in shaders");
+}
+
+void BasicShader::setViewport(int xOffset, int yOffset, int width, int height) {
+    glUniform4f(viewportUniform, xOffset, yOffset, width, height);
 }

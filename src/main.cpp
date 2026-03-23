@@ -7,11 +7,32 @@
 #include "textures.hpp"
 
 #pragma pack(push, 1)
-struct SpriteData {
+struct Rect {
     float x;
     float y;
     float w;
     float h;
+};
+
+struct Color {
+    float r;
+    float g;
+    float b;
+    float a;
+};
+
+struct FontData {
+    float a;
+    float b;
+    float c;
+    float d;
+};
+
+struct SpriteData {
+    Rect     dst;      // cell 1
+    Rect     src;      // cell 2
+    Color    color;    // cell 3
+    FontData fontData; // cell 4
 };
 #pragma pack(pop)
 
@@ -63,10 +84,13 @@ void run() {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    sprites.push_back(SpriteData{ .x = -0.7, .y = -0.7, .w = 0.5, .h = 0.5 });
-    sprites.push_back(SpriteData{ .x = -0.7, .y = 0.2, .w = 0.5, .h = 0.5 });
-    sprites.push_back(SpriteData{ .x = 0.2, .y = 0.2, .w = 0.5, .h = 0.5 });
-    sprites.push_back(SpriteData{ .x = 0.2, .y = -0.7, .w = 0.5, .h = 0.5 });
+    sprites.push_back(SpriteData{
+        .dst = Rect{.x = 10,.y = 10,.w = 256,.h = 256},
+        .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
+        });
+    //sprites.push_back(SpriteData{ .x = -0.7, .y = 0.2, .w = 0.5, .h = 0.5,.tx = 0,.ty = 0,.tw = 1.0, .th = 1.5 });
+    //sprites.push_back(SpriteData{ .x = 0.2, .y = 0.2, .w = 0.5, .h = 0.5,.tx = 0.1,.ty = 0.1,.tw = 0.9, .th = 0.9 });
+    //sprites.push_back(SpriteData{ .x = 0.2, .y = -0.7, .w = 0.5, .h = 0.5,.tx = 0,.ty = 0.1,.tw = 1.0, .th = 1.0 });
     GLuint spriteBuffer;
     glGenBuffers(1, &spriteBuffer);
     glBindBuffer(GL_TEXTURE_BUFFER, spriteBuffer);
@@ -79,6 +103,7 @@ void run() {
     glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32F, spriteBuffer);
     glBindTexture(GL_TEXTURE_BUFFER, 0);
 
+    shader.setViewport(0, 0, 800, 600);
 
     bool quit = false;
     SDL_Event e;
@@ -88,6 +113,11 @@ void run() {
             {
             case SDL_EVENT_QUIT:
                 quit = true;
+                break;
+
+            case SDL_EVENT_WINDOW_RESIZED:
+                glViewport(0, 0, e.window.data1, e.window.data2);
+                shader.setViewport(0, 0, e.window.data1, e.window.data2);
                 break;
 
             case SDL_EVENT_KEY_DOWN:

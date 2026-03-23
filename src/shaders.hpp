@@ -16,4 +16,7 @@ protected:
 class BasicShader :public ShaderProgram {
 public:
     void init() override;
+    void setViewport(int xOffset, int yOffset, int width, int height);
+private:
+    GLint viewportUniform;
 };
