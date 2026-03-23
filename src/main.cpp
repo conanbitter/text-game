@@ -24,8 +24,8 @@ struct Color {
 struct FontData {
     float scale;
     float thickness;
-    float c;
-    float d;
+    float roundness;
+    float unused;
 };
 
 struct SpriteData {
@@ -78,52 +78,52 @@ void run() {
     SDFShader shader;
     shader.init();
     Texture texture;
-    texture.load("assets/sdf_test32.png");
-    shader.setRange(32);
+    texture.load("assets/msdf_test60.png");
+    shader.setRange(60);
 
     GLuint vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    float border = 3.0; // MAX_BORDER = range*scale/2 - 1;
+    float border = 14.0; // MAX_BORDER = range*scale/2 - 1;
 
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 16,.y = 16,.w = 256,.h = 256},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 1.0, .thickness = border},
+        .fontData = FontData{.scale = 1.0, .thickness = border, .roundness = 1.0},
         });
 
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 273,.y = 16,.w = 512,.h = 512},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 2.0, .thickness = border},
+        .fontData = FontData{.scale = 2.0, .thickness = border, .roundness = 1.0},
         });
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 144,.y = 273,.w = 128,.h = 128},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 0.5, .thickness = border},
+        .fontData = FontData{.scale = 0.5, .thickness = border, .roundness = 1.0},
         });
 
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 16,.y = 16,.w = 256,.h = 256},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 0.808, .g = 0.576, .b = 0.847, .a = 1.0},
-        .fontData = FontData{.scale = 1.0, .thickness = 0.0},
+        .fontData = FontData{.scale = 1.0, .thickness = 0.0, .roundness = 0.0},
         });
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 273,.y = 16,.w = 512,.h = 512},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 0.690, .g = 0.745, .b = 0.773, .a = 1.0},
-        .fontData = FontData{.scale = 2.0, .thickness = 0.0},
+        .fontData = FontData{.scale = 2.0, .thickness = 0.0, .roundness = 0.0},
         });
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 144,.y = 273,.w = 128,.h = 128},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 1.0, .g = 0.718, .b = 0.302, .a = 1.0},
-        .fontData = FontData{.scale = 0.5, .thickness = 0.0},
+        .fontData = FontData{.scale = 0.5, .thickness = 0.0, .roundness = 0.0},
         });
     GLuint spriteBuffer;
     glGenBuffers(1, &spriteBuffer);

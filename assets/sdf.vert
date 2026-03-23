@@ -27,6 +27,7 @@ out vec2 fragUV;
 out vec4 color;
 out float scale;
 out float thickness;
+out float roundness;
 
 void main() {
     int quadID = gl_VertexID / 6;
@@ -69,4 +70,5 @@ void main() {
     color = texelFetch(spriteData, quadID * 4 + 2);
     scale = fd[0];
     thickness = fd[1];
+    roundness = fd[2];
 }
