@@ -78,19 +78,24 @@ void run() {
     BasicShader shader;
     shader.init();
     Texture texture;
-    texture.load("assets/bitmap.png");
+    texture.load("assets/sdf_test.png");
 
     GLuint vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
     sprites.push_back(SpriteData{
-        .dst = Rect{.x = 10,.y = 10,.w = 256,.h = 256},
+        .dst = Rect{.x = 16,.y = 16,.w = 256,.h = 256},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         });
-    //sprites.push_back(SpriteData{ .x = -0.7, .y = 0.2, .w = 0.5, .h = 0.5,.tx = 0,.ty = 0,.tw = 1.0, .th = 1.5 });
-    //sprites.push_back(SpriteData{ .x = 0.2, .y = 0.2, .w = 0.5, .h = 0.5,.tx = 0.1,.ty = 0.1,.tw = 0.9, .th = 0.9 });
-    //sprites.push_back(SpriteData{ .x = 0.2, .y = -0.7, .w = 0.5, .h = 0.5,.tx = 0,.ty = 0.1,.tw = 1.0, .th = 1.0 });
+    sprites.push_back(SpriteData{
+        .dst = Rect{.x = 273,.y = 16,.w = 512,.h = 512},
+        .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
+        });
+    sprites.push_back(SpriteData{
+        .dst = Rect{.x = 144,.y = 273,.w = 128,.h = 128},
+        .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
+        });
     GLuint spriteBuffer;
     glGenBuffers(1, &spriteBuffer);
     glBindBuffer(GL_TEXTURE_BUFFER, spriteBuffer);
