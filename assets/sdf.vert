@@ -24,6 +24,7 @@ uniform samplerBuffer spriteData;
 uniform sampler2D tex;
 
 out vec2 fragUV;
+out vec4 color;
 out float scale;
 out float thickness;
 
@@ -65,6 +66,7 @@ void main() {
 
     gl_Position = vec4(px, py, 0.0, 1);
     fragUV = vec2(u, v);
+    color = texelFetch(spriteData, quadID * 4 + 2);
     scale = fd[0];
     thickness = fd[1];
 }

@@ -3,6 +3,7 @@ uniform sampler2D tex;
 uniform float range;
 
 in vec2 fragUV;
+in vec4 color;
 in float scale;
 in float thickness;
 
@@ -16,7 +17,7 @@ void main() {
     float dist = texture(tex, fragUV).r * 2.0 - 1.0;
     dist = dist + 2 * thickness * k;
     float hlim = aaw * k;
-    dist = smoothstep(-hlim, hlim, dist);
+    float a = smoothstep(-hlim, hlim, dist);
     /*if(dist > hlim){
         dist = 1.0;
     } else if (dist < -hlim) {
@@ -24,5 +25,5 @@ void main() {
     } else {
         dist = 0.5;
     }*/
-    outputColor = vec4(vec3(dist), 1.0);
+    outputColor = vec4(color.rgb, color.a * a);
 }
