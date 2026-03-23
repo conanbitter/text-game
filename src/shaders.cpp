@@ -129,6 +129,14 @@ void BasicShader::init() {
 
     glUseProgram(program);
 
+    initUniforms();
+}
+
+void BasicShader::setViewport(int xOffset, int yOffset, int width, int height) {
+    glUniform4f(viewportUniform, xOffset, yOffset, width, height);
+}
+
+void BasicShader::initUniforms() {
     GLint texUniform = glGetUniformLocation(program, "tex");
     if (texUniform < 0) throw std::runtime_error("Can't find \"tex\" uniform in shaders");
     glUniform1i(texUniform, 0);
@@ -141,6 +149,21 @@ void BasicShader::init() {
     if (viewportUniform < 0) throw std::runtime_error("Can't find \"viewport\" uniform in shaders");
 }
 
-void BasicShader::setViewport(int xOffset, int yOffset, int width, int height) {
-    glUniform4f(viewportUniform, xOffset, yOffset, width, height);
+void SDFShader::init() {
+    loadFromFiles("assets/sdf.vert", "assets/sdf.frag");
+
+    glUseProgram(program);
+
+    initUniforms();
+}
+
+void SDFShader::setRange(float range) {
+    glUniform1f(rangeUniform, range);
+}
+
+void SDFShader::initUniforms() {
+    rangeUniform = glGetUniformLocation(program, "range");
+    if (rangeUniform < 0) throw std::runtime_error("Can't find \"range\" uniform in shaders");
+
+    BasicShader::initUniforms();
 }

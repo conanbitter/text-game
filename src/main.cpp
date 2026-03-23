@@ -75,10 +75,11 @@ void run() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST);
 
-    BasicShader shader;
+    SDFShader shader;
     shader.init();
     Texture texture;
     texture.load("assets/sdf_test32.png");
+    shader.setRange(32);
 
     GLuint vao;
     glGenVertexArrays(1, &vao);

@@ -17,6 +17,17 @@ class BasicShader :public ShaderProgram {
 public:
     void init() override;
     void setViewport(int xOffset, int yOffset, int width, int height);
+protected:
+    virtual void initUniforms();
 private:
     GLint viewportUniform;
+};
+
+class SDFShader :public BasicShader {
+public:
+    void init() override;
+    void setRange(float range);
+private:
+    GLint rangeUniform;
+    void initUniforms() override;
 };

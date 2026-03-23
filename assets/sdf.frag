@@ -1,0 +1,28 @@
+#version 150
+uniform sampler2D tex;
+uniform float range;
+
+in vec2 fragUV;
+in float scale;
+in float thickness;
+
+out vec4 outputColor;
+
+const float aaw = 1.5; // anti-aliasing width
+
+void main() {
+    float k = 1.0 / (range * scale);
+
+    float dist = texture(tex, fragUV).r * 2.0 - 1.0;
+    dist = dist + 2 * thickness * k;
+    float hlim = aaw * k;
+    dist = smoothstep(-hlim, hlim, dist);
+    /*if(dist > hlim){
+        dist = 1.0;
+    } else if (dist < -hlim) {
+        dist = 0.0;
+    } else {
+        dist = 0.5;
+    }*/
+    outputColor = vec4(vec3(dist), 1.0);
+}
