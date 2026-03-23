@@ -22,7 +22,7 @@ struct Color {
 };
 
 struct FontData {
-    float a;
+    float scale;
     float b;
     float c;
     float d;
@@ -78,7 +78,7 @@ void run() {
     BasicShader shader;
     shader.init();
     Texture texture;
-    texture.load("assets/sdf_test.png");
+    texture.load("assets/sdf_test32.png");
 
     GLuint vao;
     glGenVertexArrays(1, &vao);
@@ -87,14 +87,17 @@ void run() {
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 16,.y = 16,.w = 256,.h = 256},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
+        .fontData = FontData{.scale = 1.0},
         });
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 273,.y = 16,.w = 512,.h = 512},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
+        .fontData = FontData{.scale = 2.0},
         });
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 144,.y = 273,.w = 128,.h = 128},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
+        .fontData = FontData{.scale = 0.5},
         });
     GLuint spriteBuffer;
     glGenBuffers(1, &spriteBuffer);
