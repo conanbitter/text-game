@@ -192,7 +192,11 @@ int main(int argc, char* argv[]) {
         run();
     }
     catch (const std::exception& e) {
+#ifdef DEBUG        
         SDL_Log(e.what());
+#else
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", e.what(), nullptr);
+#endif        
     }
     return 0;
 }

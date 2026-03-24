@@ -67,4 +67,6 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
         WIN32_EXECUTABLE TRUE
         MSVC_RUNTIME_LIBRARY "MultiThreaded"
     )
+else()
+    target_compile_definitions(utg PRIVATE DEBUG)
 endif()
