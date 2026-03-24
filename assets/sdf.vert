@@ -28,6 +28,7 @@ out vec4 color;
 out float scale;
 out float thickness;
 out float roundness;
+out float blur;
 
 void main() {
     int quadID = gl_VertexID / 6;
@@ -68,7 +69,9 @@ void main() {
     gl_Position = vec4(px, py, 0.0, 1);
     fragUV = vec2(u, v);
     color = texelFetch(spriteData, quadID * 4 + 2);
-    scale = fd[0];
+
+    scale     = fd[0];
     thickness = fd[1];
     roundness = fd[2];
+    blur      = fd[3];
 }

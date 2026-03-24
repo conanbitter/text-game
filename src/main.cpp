@@ -25,7 +25,7 @@ struct FontData {
     float scale;
     float thickness;
     float roundness;
-    float unused;
+    float blur;
 };
 
 struct SpriteData {
@@ -91,20 +91,20 @@ void run() {
         .dst = Rect{.x = 16,.y = 16,.w = 256,.h = 256},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 1.0, .thickness = border, .roundness = 1.0},
+        .fontData = FontData{.scale = 1.0, .thickness = border, .roundness = 1.0, .blur = 0.0},
         });
 
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 273,.y = 16,.w = 512,.h = 512},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 2.0, .thickness = border, .roundness = 1.0},
+        .fontData = FontData{.scale = 2.0, .thickness = border, .roundness = 1.0, .blur = 0.0},
         });
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 144,.y = 273,.w = 128,.h = 128},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 0.5, .thickness = border, .roundness = 1.0},
+        .fontData = FontData{.scale = 0.5, .thickness = border, .roundness = 1.0, .blur = 0.0},
         });
 
     sprites.push_back(SpriteData{

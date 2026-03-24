@@ -7,6 +7,7 @@ in vec4 color;
 in float scale;
 in float thickness;
 in float roundness;
+in float blur;
 
 out vec4 outputColor;
 
@@ -24,8 +25,14 @@ void main() {
 
     float dist = (sdf*roundness + msdf*(1-roundness)) * 2.0 - 1.0;
     dist = dist + 2 * thickness * k;
-    float hlim = aaw * k;
-    float a = smoothstep(-hlim, hlim, dist);
+
+    float aa_limit = aaw * k;
+    float blur_limit = -blur * 2 * k;
+
+    float inner_limit = aa_limit;
+    float outer_limit = min(-aa_limit, blur_limit);
+
+    float a = smoothstep(outer_limit, inner_limit, dist);
     /*if(dist > hlim){
         dist = 1.0;
     } else if (dist < -hlim) {
