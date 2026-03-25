@@ -27,7 +27,9 @@ class SDFShader :public BasicShader {
 public:
     void init() override;
     void setRange(float range);
+    void setScale(float scale);
 private:
     GLint rangeUniform;
+    GLint scaleUniform;
     void initUniforms() override;
 };

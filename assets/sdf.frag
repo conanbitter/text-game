@@ -1,6 +1,7 @@
 #version 150
 uniform sampler2D tex;
 uniform float range;
+uniform float windowScale;
 
 in vec2 fragUV;
 in vec4 color;
@@ -27,7 +28,7 @@ void main() {
 
     float dist = (sdf*roundness + msdf*(1-roundness)) * 2.0 - 1.0;
     
-    float aa_limit = aaw * k;    
+    float aa_limit = aaw * k / windowScale;    
 
     float shape_offset = min(2 * thickness * k, OUTER_EDGE - aa_limit);
     dist += shape_offset;

@@ -38,8 +38,36 @@ struct SpriteData {
 
 SDL_Window* window;
 SDL_GLContext context;
+SDFShader shader;
+int virtualWidth = 800;
+int virtualHeight = 600;
 
 std::vector<SpriteData> sprites;
+
+void resize(int newWidth, int newHeight) {
+    glViewport(0, 0, newWidth, newHeight);
+    //shader.setViewport(0, 0, e.window.data1, e.window.data2);
+    float xOffset = 0.0f;
+    float yOffset = 0.0f;
+    float scale = 1.0f;
+
+    float windowAR = (float)newWidth / newHeight;
+    float virtualAR = (float)virtualWidth / virtualHeight;
+
+    if (virtualAR < windowAR) {
+        float realWidth = virtualHeight * windowAR;
+        xOffset = (realWidth - virtualWidth) / 2.0f;
+        scale = (float)newHeight / virtualHeight;
+    }
+    if (virtualAR > windowAR) {
+        float realHeight = virtualWidth / windowAR;
+        yOffset = (realHeight - virtualHeight) / 2.0f;
+        scale = (float)newWidth / virtualWidth;
+    }
+
+    shader.setViewport(xOffset, yOffset, virtualWidth, virtualHeight);
+    shader.setScale(scale);
+}
 
 void run() {
 
@@ -75,7 +103,6 @@ void run() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST);
 
-    SDFShader shader;
     shader.init();
     Texture texture;
     texture.load("assets/msdf_test60.png");
@@ -85,25 +112,25 @@ void run() {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    float border = 110.0; // MAX_BORDER = range*scale/2 - 1;
+    float border = 10.0; // MAX_BORDER = range*scale/2 - 1;
 
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 16,.y = 16,.w = 256,.h = 256},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 1.0, .thickness = border, .roundness = 1.0, .blur = 115.0},
+        .fontData = FontData{.scale = 1.0, .thickness = border, .roundness = 1.0, .blur = 0.0},
         });
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 273,.y = 16,.w = 512,.h = 512},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 2.0, .thickness = border, .roundness = 1.0, .blur = 115.0},
+        .fontData = FontData{.scale = 2.0, .thickness = border, .roundness = 1.0, .blur = 0.0},
         });
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 144,.y = 273,.w = 128,.h = 128},
         .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
         .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 0.5, .thickness = border, .roundness = 1.0, .blur = 115.0},
+        .fontData = FontData{.scale = 0.5, .thickness = border, .roundness = 1.0, .blur = 0.0},
         });
 
     sprites.push_back(SpriteData{
@@ -136,7 +163,7 @@ void run() {
     glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32F, spriteBuffer);
     glBindTexture(GL_TEXTURE_BUFFER, 0);
 
-    shader.setViewport(0, 0, 800, 600);
+    resize(800, 600);
 
     bool quit = false;
     SDL_Event e;
@@ -149,8 +176,7 @@ void run() {
                 break;
 
             case SDL_EVENT_WINDOW_RESIZED:
-                glViewport(0, 0, e.window.data1, e.window.data2);
-                shader.setViewport(0, 0, e.window.data1, e.window.data2);
+                resize(e.window.data1, e.window.data2);
                 break;
 
             case SDL_EVENT_KEY_DOWN:

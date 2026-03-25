@@ -161,9 +161,16 @@ void SDFShader::setRange(float range) {
     glUniform1f(rangeUniform, range);
 }
 
+void SDFShader::setScale(float scale) {
+    glUniform1f(scaleUniform, scale);
+}
+
 void SDFShader::initUniforms() {
     rangeUniform = glGetUniformLocation(program, "range");
     if (rangeUniform < 0) throw std::runtime_error("Can't find \"range\" uniform in shaders");
+
+    scaleUniform = glGetUniformLocation(program, "windowScale");
+    if (scaleUniform < 0) throw std::runtime_error("Can't find \"windowScale\" uniform in shaders");
 
     BasicShader::initUniforms();
 }
