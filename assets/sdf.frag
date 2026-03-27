@@ -12,7 +12,7 @@ in float blur;
 
 out vec4 outputColor;
 
-const float aaw = 1.5; // anti-aliasing width
+const float aaw = 1.3; // anti-aliasing width
 const float MAX_OUT_LIMIT = 0.1 * 2.0 / 255.0 - 1.0;
 const float OUTER_EDGE = 1.0; //- 1.0e-5; maybe add bias
 

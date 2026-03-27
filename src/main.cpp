@@ -105,51 +105,53 @@ void run() {
 
     shader.init();
     Texture texture;
-    texture.load("assets/msdf_test60.png");
-    shader.setRange(60);
+    texture.load("assets/font11.png");
+    shader.setRange(11);
 
     GLuint vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    float border = 10.0; // MAX_BORDER = range*scale/2 - 1;
-
+    float border = 1.0; // MAX_BORDER = range*scale/2 - 1;
+    int tw, th;
+    texture.getSize(tw, th);
+    /*
+        sprites.push_back(SpriteData{
+            .dst = Rect{.x = 16,.y = 16,.w = 256,.h = 256},
+            .src = Rect{.x = 0,.y = 0,.w = (float)tw, .h = (float)th},
+            .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 0.5},
+            .fontData = FontData{.scale = 256.0f / tw , .thickness = border, .roundness = 1.0, .blur = 10.0},
+            });
+        sprites.push_back(SpriteData{
+            .dst = Rect{.x = 273,.y = 16,.w = 512,.h = 512},
+            .src = Rect{.x = 0,.y = 0,.w = (float)tw, .h = (float)th},
+            .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 0.2},
+            .fontData = FontData{.scale = 512.0f / tw, .thickness = border, .roundness = 1.0, .blur = 10.0},
+            });
+        sprites.push_back(SpriteData{
+            .dst = Rect{.x = 144,.y = 273,.w = 128,.h = 128},
+            .src = Rect{.x = 0,.y = 0,.w = (float)tw, .h = (float)th},
+            .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
+            .fontData = FontData{.scale = 128.0f / tw , .thickness = border, .roundness = 1.0, .blur = 10.0},
+            });
+    */
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 16,.y = 16,.w = 256,.h = 256},
-        .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
-        .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 1.0, .thickness = border, .roundness = 1.0, .blur = 0.0},
+        .src = Rect{.x = 0,.y = 0,.w = (float)tw, .h = (float)th},
+        .color = Color{.r = 1.0, .g = 1.0, .b = 1.0, .a = 1.0},
+        .fontData = FontData{.scale = 256.0f / tw, .thickness = 0.0, .roundness = 0.0},
         });
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 273,.y = 16,.w = 512,.h = 512},
-        .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
-        .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 2.0, .thickness = border, .roundness = 1.0, .blur = 0.0},
+        .src = Rect{.x = 0,.y = 0,.w = (float)tw, .h = (float)th},
+        .color = Color{.r = 1.0, .g = 1.0, .b = 1.0, .a = 1.0},
+        .fontData = FontData{.scale = 512.0f / tw, .thickness = 0.0, .roundness = 0.0},
         });
     sprites.push_back(SpriteData{
         .dst = Rect{.x = 144,.y = 273,.w = 128,.h = 128},
-        .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
-        .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
-        .fontData = FontData{.scale = 0.5, .thickness = border, .roundness = 1.0, .blur = 0.0},
-        });
-
-    sprites.push_back(SpriteData{
-        .dst = Rect{.x = 16,.y = 16,.w = 256,.h = 256},
-        .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
-        .color = Color{.r = 0.808, .g = 0.576, .b = 0.847, .a = 1.0},
-        .fontData = FontData{.scale = 1.0, .thickness = 0.0, .roundness = 0.0},
-        });
-    sprites.push_back(SpriteData{
-        .dst = Rect{.x = 273,.y = 16,.w = 512,.h = 512},
-        .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
-        .color = Color{.r = 0.690, .g = 0.745, .b = 0.773, .a = 1.0},
-        .fontData = FontData{.scale = 2.0, .thickness = 0.0, .roundness = 0.0},
-        });
-    sprites.push_back(SpriteData{
-        .dst = Rect{.x = 144,.y = 273,.w = 128,.h = 128},
-        .src = Rect{.x = 0,.y = 0,.w = 256, .h = 256},
-        .color = Color{.r = 1.0, .g = 0.718, .b = 0.302, .a = 1.0},
-        .fontData = FontData{.scale = 0.5, .thickness = 0.0, .roundness = 0.0},
+        .src = Rect{.x = 0,.y = 0,.w = (float)tw, .h = (float)th},
+        .color = Color{.r = 1.0, .g = 1.0, .b = 1.0, .a = 1.0},
+        .fontData = FontData{.scale = 128.0f / tw, .thickness = 0.0, .roundness = 0.0},
         });
     GLuint spriteBuffer;
     glGenBuffers(1, &spriteBuffer);
@@ -200,7 +202,7 @@ void run() {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_BUFFER, spriteTexture);
         shader.use();
-        glClearColor(0.8f, 0.9f, 1.0f, 1.0f);
+        glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glDrawArrays(GL_TRIANGLES, 0, 6 * sprites.size());
         SDL_GL_SwapWindow(window);
