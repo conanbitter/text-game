@@ -2,6 +2,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <vector>
+#include <map>
 
 #include "utf8.h"
 
@@ -37,6 +38,30 @@ struct SpriteData {
     FontData fontData; // cell 4
 };
 #pragma pack(pop)
+
+struct Point {
+    float x;
+    float y;
+};
+
+struct Size {
+    float w;
+    float h;
+};
+
+struct GlyphData
+{
+    Rect rect;
+    Point origin;
+    float advance;
+};
+
+struct Font {
+    float range;
+    float spaceAdvance;
+    std::map<uint32_t, GlyphData> glyphs;
+};
+
 
 SDL_Window* window;
 SDL_GLContext context;
@@ -217,7 +242,7 @@ void run() {
 }
 
 int main(int argc, char* argv[]) {
-    std::string teststring = "Hello world! Привет мир!я";
+    std::string teststring = "Hello world! Привет мир!";
     SDL_Log("Letters:\n");
     utf8::iterator it(teststring.begin(), teststring.begin(), teststring.end());
     utf8::iterator endit(teststring.end(), teststring.begin(), teststring.end());
