@@ -3,6 +3,8 @@
 #include <SDL3/SDL_main.h>
 #include <vector>
 
+#include "utf8.h"
+
 #include "shaders.hpp"
 #include "textures.hpp"
 
@@ -215,6 +217,17 @@ void run() {
 }
 
 int main(int argc, char* argv[]) {
+    std::string teststring = "Hello world! Привет мир!я";
+    SDL_Log("Letters:\n");
+    utf8::iterator it(teststring.begin(), teststring.begin(), teststring.end());
+    utf8::iterator endit(teststring.end(), teststring.begin(), teststring.end());
+    for (auto i = it;i != endit;++i) {
+        uint32_t point = *i;
+        SDL_Log("- %d\n", point);
+    }
+    return 0;
+
+
     try {
         run();
     }

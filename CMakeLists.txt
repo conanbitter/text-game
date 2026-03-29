@@ -58,6 +58,7 @@ add_executable(utg
 target_include_directories(utg PRIVATE 
     vendored/glad/include
     vendored/stb
+    vendored/utfcpp
 )
 
 target_link_libraries(utg PRIVATE SDL3::SDL3)
