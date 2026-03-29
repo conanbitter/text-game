@@ -37,7 +37,7 @@ for glyph_data in raw_data['glyphs']:
     # glyph_width = glyph_data['planeBounds']['right'] - glyph_data['planeBounds']['left']
     # glyph_height = glyph_data['planeBounds']['top'] - glyph_data['planeBounds']['bottom']
     glyph_originx = -glyph_data['planeBounds']['left'] * em_size  # / glyph_width * glyph_rect_w
-    glyph_originy = -glyph_data['planeBounds']['bottom'] * em_size  # / glyph_height * glyph_rect_h
+    glyph_originy = glyph_data['planeBounds']['top'] * em_size  # / glyph_height * glyph_rect_h
 
     glyph_advance = glyph_data['advance'] * em_size
 

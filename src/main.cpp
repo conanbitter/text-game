@@ -2,7 +2,8 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <vector>
-#include <map>
+#include <unordered_map>
+#include <fstream>
 
 #include "utf8.h"
 
@@ -59,9 +60,10 @@ struct GlyphData
 struct Font {
     float range;
     float spaceAdvance;
-    std::map<uint32_t, GlyphData> glyphs;
+    std::unordered_map<uint32_t, GlyphData> glyphs;
 };
 
+const uint32_t DEFAULT_GLYPH = 35; // '#'
 
 SDL_Window* window;
 SDL_GLContext context;
@@ -70,6 +72,88 @@ int virtualWidth = 800;
 int virtualHeight = 600;
 
 std::vector<SpriteData> sprites;
+
+float readFloat(std::ifstream& file) {
+    float result;
+    file.read(reinterpret_cast<char*>(&result), sizeof(float));
+    return result;
+}
+
+uint32_t readUint32(std::ifstream& file) {
+    uint32_t result;
+    file.read(reinterpret_cast<char*>(&result), sizeof(uint32_t));
+    return result;
+}
+
+Font loadFont(const char* filename) {
+    Font font;
+
+    std::ifstream file(filename, std::ios::in | std::ios::binary);
+    font.range = readFloat(file);
+    font.spaceAdvance = readFloat(file);
+
+    uint32_t glyphCount = readUint32(file);
+    for (uint32_t i = 0;i < glyphCount;i++) {
+        GlyphData data;
+        uint32_t code = readUint32(file);
+        data.rect.x = readFloat(file);
+        data.rect.y = readFloat(file);
+        data.rect.w = readFloat(file);
+        data.rect.h = readFloat(file);
+        data.origin.x = readFloat(file);
+        data.origin.y = readFloat(file);
+        data.advance = readFloat(file);
+        font.glyphs[code] = data;
+    }
+
+    return font;
+}
+
+void printText(const char* text, float x, float y, float scale, Font& font) {
+    std::string teststring(text);
+    std::vector<SpriteData> letters;
+    std::vector<SpriteData> shadows;
+
+    utf8::iterator it(teststring.begin(), teststring.begin(), teststring.end());
+    utf8::iterator endit(teststring.end(), teststring.begin(), teststring.end());
+    for (auto i = it;i != endit;++i) {
+        uint32_t code = *i;
+
+        if (code == 32) { // space
+            x += font.spaceAdvance * scale;
+            continue;
+        }
+
+        auto glyph = font.glyphs.find(code);
+        if (glyph == font.glyphs.end()) glyph = font.glyphs.find(DEFAULT_GLYPH);
+        GlyphData& gd = glyph->second;
+
+        Rect dst = Rect{
+            .x = x - gd.origin.x * scale,
+            .y = y - gd.origin.y * scale,
+            .w = gd.rect.w * scale,
+            .h = gd.rect.h * scale
+        };
+
+        shadows.push_back(SpriteData{
+        .dst = dst,
+        .src = gd.rect,
+        .color = Color{.r = 0.2, .g = 0.4, .b = 0.6, .a = 1.0},
+        .fontData = FontData{.scale = scale , .thickness = 2.0f, .roundness = 1.0f, .blur = 0.0f},
+            });
+
+        letters.push_back(SpriteData{
+        .dst = dst,
+        .src = gd.rect,
+        .color = Color{.r = 1.0, .g = 1.0, .b = 1.0, .a = 1.0},
+        .fontData = FontData{.scale = scale , .thickness = 0.0f, .roundness = 0.0f, .blur = 0.0f},
+            });
+
+        x += gd.advance * scale;
+    }
+    sprites.insert(sprites.end(), shadows.begin(), shadows.end());
+    sprites.insert(sprites.end(), letters.begin(), letters.end());
+}
 
 void resize(int newWidth, int newHeight) {
     glViewport(0, 0, newWidth, newHeight);
@@ -139,10 +223,29 @@ void run() {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
+    Font font = loadFont("assets/font.fnt");
+
     float border = 2.0; // MAX_BORDER = range*scale/2 - 1;
     int tw, th;
     texture.getSize(tw, th);
-    sprites.push_back(SpriteData{
+    float lh = 35.0;
+    float y = 12.0 + lh * 2.0;
+    printText("Hello world! Привет мир!", 100, y, 2.0f, font);y += lh * 2.0f;
+    printText("Hello world! Привет мир!", 100, y, 1.8f, font);y += lh * 1.8f;
+    printText("Hello world! Привет мир!", 100, y, 1.6f, font);y += lh * 1.6f;
+    printText("Hello world! Привет мир!", 100, y, 1.4f, font);y += lh * 1.4f;
+    printText("Hello world! Привет мир!", 100, y, 1.2f, font);y += lh * 1.2f;
+    printText("Hello world! Привет мир!", 100, y, 1.0f, font);y += lh * 1.0f;
+    printText("Hello world! Привет мир!", 100, y, 0.9f, font);y += lh * 0.9f;
+    printText("Hello world! Привет мир!", 100, y, 0.8f, font);y += lh * 0.8f;
+    printText("Hello world! Привет мир!", 100, y, 0.7f, font);y += lh * 0.7f;
+    printText("Hello world! Привет мир!", 100, y, 0.6f, font);y += lh * 0.6f;
+    printText("Hello world! Привет мир!", 100, y, 0.5f, font);y += lh * 0.5f;
+    printText("Hello world! Привет мир!", 100, y, 0.4f, font);y += lh * 0.4f;
+    printText("Hello world! Привет мир!", 100, y, 0.3f, font);y += lh * 0.3f;
+    printText("Hello world! Привет мир!", 100, y, 0.2f, font);y += lh * 0.2f;
+    printText("Hello world! Привет мир!", 100, y, 0.1f, font);y += lh * 0.1f;
+    /*sprites.push_back(SpriteData{
         .dst = Rect{.x = 16,.y = 16,.w = 256,.h = 256},
         .src = Rect{.x = 0,.y = 0,.w = (float)tw, .h = (float)th},
         .color = Color{.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
@@ -178,7 +281,7 @@ void run() {
         .src = Rect{.x = 0,.y = 0,.w = (float)tw, .h = (float)th},
         .color = Color{.r = 1.0, .g = 1.0, .b = 1.0, .a = 1.0},
         .fontData = FontData{.scale = 128.0f / tw, .thickness = 0.0, .roundness = 0.0},
-        });
+        });*/
     GLuint spriteBuffer;
     glGenBuffers(1, &spriteBuffer);
     glBindBuffer(GL_TEXTURE_BUFFER, spriteBuffer);
@@ -228,7 +331,7 @@ void run() {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_BUFFER, spriteTexture);
         shader.use();
-        glClearColor(0.81f, 0.82f, 0.83f, 1.0f);
+        glClearColor(0.6f, 0.7f, 0.8f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glDrawArrays(GL_TRIANGLES, 0, 6 * sprites.size());
         SDL_GL_SwapWindow(window);
@@ -242,17 +345,6 @@ void run() {
 }
 
 int main(int argc, char* argv[]) {
-    std::string teststring = "Hello world! Привет мир!";
-    SDL_Log("Letters:\n");
-    utf8::iterator it(teststring.begin(), teststring.begin(), teststring.end());
-    utf8::iterator endit(teststring.end(), teststring.begin(), teststring.end());
-    for (auto i = it;i != endit;++i) {
-        uint32_t point = *i;
-        SDL_Log("- %d\n", point);
-    }
-    return 0;
-
-
     try {
         run();
     }
