@@ -3,7 +3,9 @@
 #include <SDL3/SDL_main.h>
 #include <vector>
 #include <unordered_map>
+#include <map>
 #include <fstream>
+#include <utility>
 
 #include "utf8.h"
 
@@ -61,6 +63,7 @@ struct Font {
     float range;
     float spaceAdvance;
     std::unordered_map<uint32_t, GlyphData> glyphs;
+    std::map<std::pair<uint32_t, uint32_t>, float> kerning;
 };
 
 const uint32_t DEFAULT_GLYPH = 35; // '#'
@@ -93,6 +96,7 @@ Font loadFont(const char* filename) {
     font.spaceAdvance = readFloat(file);
 
     uint32_t glyphCount = readUint32(file);
+    uint32_t kpairsCount = readUint32(file);
     for (uint32_t i = 0;i < glyphCount;i++) {
         GlyphData data;
         uint32_t code = readUint32(file);
@@ -106,6 +110,13 @@ Font loadFont(const char* filename) {
         font.glyphs[code] = data;
     }
 
+    for (uint32_t i = 0;i < kpairsCount;i++) {
+        uint32_t left = readUint32(file);
+        uint32_t right = readUint32(file);
+        float dist = readFloat(file);
+        font.kerning[{left, right}] = dist;
+    }
+
     return font;
 }
 
@@ -113,6 +124,7 @@ void printText(const char* text, float x, float y, float scale, Font& font) {
     std::string teststring(text);
     std::vector<SpriteData> letters;
     std::vector<SpriteData> shadows;
+    uint32_t prev = 0;
 
     utf8::iterator it(teststring.begin(), teststring.begin(), teststring.end());
     utf8::iterator endit(teststring.end(), teststring.begin(), teststring.end());
@@ -127,6 +139,11 @@ void printText(const char* text, float x, float y, float scale, Font& font) {
         auto glyph = font.glyphs.find(code);
         if (glyph == font.glyphs.end()) glyph = font.glyphs.find(DEFAULT_GLYPH);
         GlyphData& gd = glyph->second;
+
+        auto kp = font.kerning.find({ prev, code });
+        if (kp != font.kerning.end()) {
+            x += kp->second * scale;
+        }
 
         Rect dst = Rect{
             .x = x - gd.origin.x * scale,
@@ -150,6 +167,7 @@ void printText(const char* text, float x, float y, float scale, Font& font) {
             });
 
         x += gd.advance * scale;
+        prev = code;
     }
     sprites.insert(sprites.end(), shadows.begin(), shadows.end());
     sprites.insert(sprites.end(), letters.begin(), letters.end());
@@ -230,21 +248,22 @@ void run() {
     texture.getSize(tw, th);
     float lh = 35.0;
     float y = 12.0 + lh * 2.0;
-    printText("Hello world! Привет мир!", 100, y, 2.0f, font);y += lh * 2.0f;
-    printText("Hello world! Привет мир!", 100, y, 1.8f, font);y += lh * 1.8f;
-    printText("Hello world! Привет мир!", 100, y, 1.6f, font);y += lh * 1.6f;
-    printText("Hello world! Привет мир!", 100, y, 1.4f, font);y += lh * 1.4f;
-    printText("Hello world! Привет мир!", 100, y, 1.2f, font);y += lh * 1.2f;
-    printText("Hello world! Привет мир!", 100, y, 1.0f, font);y += lh * 1.0f;
-    printText("Hello world! Привет мир!", 100, y, 0.9f, font);y += lh * 0.9f;
-    printText("Hello world! Привет мир!", 100, y, 0.8f, font);y += lh * 0.8f;
-    printText("Hello world! Привет мир!", 100, y, 0.7f, font);y += lh * 0.7f;
-    printText("Hello world! Привет мир!", 100, y, 0.6f, font);y += lh * 0.6f;
-    printText("Hello world! Привет мир!", 100, y, 0.5f, font);y += lh * 0.5f;
-    printText("Hello world! Привет мир!", 100, y, 0.4f, font);y += lh * 0.4f;
-    printText("Hello world! Привет мир!", 100, y, 0.3f, font);y += lh * 0.3f;
-    printText("Hello world! Привет мир!", 100, y, 0.2f, font);y += lh * 0.2f;
-    printText("Hello world! Привет мир!", 100, y, 0.1f, font);y += lh * 0.1f;
+    const char* message = "AW To Hello world! Привет мир!";
+    printText(message, 100, y, 2.0f, font);y += lh * 2.0f;
+    printText(message, 100, y, 1.8f, font);y += lh * 1.8f;
+    printText(message, 100, y, 1.6f, font);y += lh * 1.6f;
+    printText(message, 100, y, 1.4f, font);y += lh * 1.4f;
+    printText(message, 100, y, 1.2f, font);y += lh * 1.2f;
+    printText(message, 100, y, 1.0f, font);y += lh * 1.0f;
+    printText(message, 100, y, 0.9f, font);y += lh * 0.9f;
+    printText(message, 100, y, 0.8f, font);y += lh * 0.8f;
+    printText(message, 100, y, 0.7f, font);y += lh * 0.7f;
+    printText(message, 100, y, 0.6f, font);y += lh * 0.6f;
+    printText(message, 100, y, 0.5f, font);y += lh * 0.5f;
+    printText(message, 100, y, 0.4f, font);y += lh * 0.4f;
+    printText(message, 100, y, 0.3f, font);y += lh * 0.3f;
+    printText(message, 100, y, 0.2f, font);y += lh * 0.2f;
+    printText(message, 100, y, 0.1f, font);y += lh * 0.1f;
     /*sprites.push_back(SpriteData{
         .dst = Rect{.x = 16,.y = 16,.w = 256,.h = 256},
         .src = Rect{.x = 0,.y = 0,.w = (float)tw, .h = (float)th},

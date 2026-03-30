@@ -1,8 +1,14 @@
 import json
 import struct
 
+raw_data = None
+kerning_data = None
+
 with open("font.json", 'r') as inf:
     raw_data = json.load(inf)
+
+with open("kerning.json", 'r') as inf:
+    kerning_data = json.load(inf)
 
 outf = open("../font.fnt", 'wb')
 
@@ -12,18 +18,28 @@ image_width = raw_data['atlas']['width']
 image_height = raw_data['atlas']['height']
 space_advance = 0.0
 glyph_count = 0
+glyphs = set()
 
 for glyph_data in raw_data['glyphs']:
     if glyph_data['unicode'] == 32:
         space_advance = glyph_data['advance'] * em_size
     if 'atlasBounds' in glyph_data:
         glyph_count += 1
+    glyphs.add(glyph_data['unicode'])
 
+kerning = []
+kern_emsize = kerning_data['emsize'] / em_size
+for kd in kerning_data['pairs']:
+    gleft = kd['left']
+    gright = kd['right']
+    kern = kd['kerning']
+    if (gleft in glyphs) and (gright in glyphs):
+        kerning.append({'left': gleft, 'right': gright, 'kerning': kern / kern_emsize})
 
 sdf_range = raw_data['atlas']['distanceRange']
 glyph_count = glyph_count
 
-outf.write(struct.pack('ffL', sdf_range, space_advance, glyph_count))
+outf.write(struct.pack('ffLL', sdf_range, space_advance, glyph_count, len(kerning)))
 
 for glyph_data in raw_data['glyphs']:
     glyph_code = glyph_data['unicode']
@@ -48,4 +64,6 @@ for glyph_data in raw_data['glyphs']:
     # print(glyph_data)
     outf.write(struct.pack('Lfffffff', glyph_code, glyph_rect_x, glyph_rect_y, glyph_rect_w, glyph_rect_h, glyph_originx, glyph_originy, glyph_advance))
 
+for k in kerning:
+    outf.write(struct.pack('LLf', k['left'], k['right'], k['kerning']))
 outf.close()
