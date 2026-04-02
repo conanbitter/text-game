@@ -1,4 +1,8 @@
-#pragma once
+#ifndef TAF_HPP
+#define TAF_HPP
+
+#include "app.hpp"
+#include "window.hpp"
 
 namespace taf {
 
@@ -29,7 +33,6 @@ namespace taf {
         FontData fontData;
     };
 
-
     struct SpriteData {
         Rect      dst;   // cell 1
         Rect      src;   // cell 2
@@ -39,3 +42,5 @@ namespace taf {
 #pragma pack(pop)
 
 }
+
+#endif
