@@ -1,5 +1,4 @@
-#include "taf.hpp"
 #include "app.hpp"
 
-void taf::App::run() {
+void App::run() {
 }

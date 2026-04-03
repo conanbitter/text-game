@@ -1,20 +1,13 @@
-#ifndef APP_HPP
-#define APP_HPP
+#pragma once
 
-namespace taf {
+class App {
+public:
+    virtual void load() {}
+    virtual void update() {}
+    virtual void draw() {}
 
-    class App {
-    public:
-        virtual void load() {}
-        virtual void update() {}
-        virtual void draw() {}
+    void run();
 
-        void run();
+private:
 
-    private:
-
-    };
-
-}
-
-#endif
+};
