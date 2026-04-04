@@ -16,6 +16,12 @@ set(SRC_FILES
 
     textures.hpp
     textures.cpp
+
+    window.hpp
+    window.cpp
+
+    app.hpp
+    app.cpp
 )
 
 set(SDL_VULKAN OFF CACHE BOOL "" FORCE)

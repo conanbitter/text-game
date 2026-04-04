@@ -1,5 +1,7 @@
 #pragma once
 
+#include "window.hpp"
+
 class App {
 public:
     virtual void load() {}
@@ -9,5 +11,5 @@ public:
     void run();
 
 private:
-
+    Window window;
 };

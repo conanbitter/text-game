@@ -1,25 +1,32 @@
 #pragma once
 
+#include <SDL3/SDL.h>
 #include <string>
+
+class App;
 
 class Window {
 public:
+    void init(int width, int height, const char* title);
+    void free();
+    void startLoop();
     void setTitle(const std::string& title);
-    void setVirtualResolution(int width, int height);
-    void disableVirtualResolution();
+    //void setVirtualResolution(int width, int height);
+    //void disableVirtualResolution();
 
 private:
-    void resize();
+    void resize(int newWidth, int newHeight);
 
-    const App& app;
+    App& app;
 
     SDL_Window* window;
-    SDL_GLContext context;
+    //SDL_GLContext context;
 
-    int virtualWidth = 0;
-    int virtualHeight = 0;
+    //int virtualWidth = 0;
+    //int virtualHeight = 0;
     int width;
     int height;
+    bool quit;
 };
 
 void ShowError(const std::exception& e);
