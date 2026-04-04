@@ -2,6 +2,8 @@
 #include "window.hpp"
 #include "app.hpp"
 
+Window::Window(App& parent) :app{ parent } {}
+
 void Window::init(int width, int height, const char* title) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         throw std::runtime_error(std::format("SDL could not initialize!SDL_Error: \"{}\"", SDL_GetError()));
@@ -83,12 +85,4 @@ void Window::disableVirtualResolution() {
 void Window::resize(int newWidth, int newHeight) {
     width = newWidth;
     height = newHeight;
-}
-
-void ShowError(const std::exception& e) {
-#ifdef DEBUG        
-    SDL_Log(e.what());
-#else
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", e.what(), nullptr);
-#endif
 }

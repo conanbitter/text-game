@@ -7,6 +7,7 @@ class App;
 
 class Window {
 public:
+    Window(App& parent);
     void init(int width, int height, const char* title);
     void free();
     void startLoop();
@@ -28,5 +29,3 @@ private:
     int height;
     bool quit;
 };
-
-void ShowError(const std::exception& e);
