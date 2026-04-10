@@ -12,3 +12,4 @@ namedBin["main"] = "utg"
 # Dependencies
 
 requires "nim >= 2.2.8"
+requires "staticglfw >= 4.1.3"

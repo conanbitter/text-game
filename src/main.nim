@@ -1,5 +1,23 @@
-# This is just an example to get you started. A typical binary package
-# uses this file as the main entry point of the application.
+import staticglfw
+import opengl
 
-when isMainModule:
-  echo("Hello, World!")
+if init() == 0:
+    raise newException(Exception, "Failed to Initialize GLFW")
+
+var window = createWindow(800, 600, "GLFW3 WINDOW", nil, nil)
+window.makeContextCurrent()
+loadExtensions()
+
+while windowShouldClose(window) == 0:
+
+    glClearColor(1, 0, 0, 1)
+    glClear(GL_COLOR_BUFFER_BIT)
+
+    window.swapBuffers()
+
+    pollEvents()
+    if window.getKey(KEY_ESCAPE) == 1:
+        window.setWindowShouldClose(1)
+
+window.destroyWindow()
+terminate()
