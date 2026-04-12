@@ -20,6 +20,9 @@ set(SRC_FILES
     window.hpp
     window.cpp
 
+    renderer.hpp
+    renderer.cpp
+
     app.hpp
     app.cpp
 )

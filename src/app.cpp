@@ -4,6 +4,7 @@ App::App() :window(*this) {}
 
 void App::run(int initialWidth, int initialHeight, const char* title) {
     window.init(initialWidth, initialHeight, title);
+    renderer.init();
 
     load();
 
@@ -16,10 +17,12 @@ void App::run(int initialWidth, int initialHeight, const char* title) {
 
         draw();
 
+        renderer.draw();
         window.present();
     }
 
-    window.free();
+    renderer.destroy();
+    window.destroy();
 }
 
 void App::requestQuit() {

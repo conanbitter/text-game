@@ -1,6 +1,7 @@
 #pragma once
 
 #include "window.hpp"
+#include "renderer.hpp"
 
 class App {
 public:
@@ -14,6 +15,7 @@ public:
 
 private:
     Window window;
+    Renderer renderer;
     bool working;
 };
 

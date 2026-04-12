@@ -1,16 +1,17 @@
 #include <format>
+#include "glad/gl.h"
 #include "window.hpp"
 #include "app.hpp"
 
 Window::Window(App& parent) :app{ parent } {}
 
 Window::~Window() {
-    free();
+    destroy();
 }
 
 void Window::init(int width, int height, const char* title) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
-        throw std::runtime_error(std::format("SDL could not initialize!SDL_Error: \"{}\"", SDL_GetError()));
+        throw std::runtime_error(std::format("SDL could not initialize! SDL_Error: \"{}\"", SDL_GetError()));
     }
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -23,10 +24,21 @@ void Window::init(int width, int height, const char* title) {
         throw std::runtime_error(std::format("Window could not be created! SDL_Error: \"{}\"", SDL_GetError()));
     }
 
+    context = SDL_GL_CreateContext(window);
+    if (context == NULL) {
+        throw std::runtime_error(std::format("OpenGL context could not be created! SDL_Error: \"{}\"", SDL_GetError()));
+    }
+
+    int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
+#ifdef DEBUG        
+    SDL_Log("Using OpenGL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+#endif
+
     resize(width, height);
 }
 
-void Window::free() {
+void Window::destroy() {
+    SDL_GL_DestroyContext(context);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }

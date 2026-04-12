@@ -22,15 +22,4 @@ struct FontData {
     float blur;
 };
 
-union ExtraData
-{
-    FontData fontData;
-};
-
-struct SpriteData {
-    Rect      dst;   // cell 1
-    Rect      src;   // cell 2
-    Color     color; // cell 3
-    ExtraData extra; // cell 4
-};
 #pragma pack(pop)
