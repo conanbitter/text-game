@@ -10,9 +10,11 @@ public:
     virtual void draw() {}
 
     void run(int initialWidth, int initialHeight, const char* title);
+    void requestQuit();
 
 private:
     Window window;
+    bool working;
 };
 
 void ShowError(const std::exception& e);

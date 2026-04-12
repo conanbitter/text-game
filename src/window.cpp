@@ -4,6 +4,10 @@
 
 Window::Window(App& parent) :app{ parent } {}
 
+Window::~Window() {
+    free();
+}
+
 void Window::init(int width, int height, const char* title) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         throw std::runtime_error(std::format("SDL could not initialize!SDL_Error: \"{}\"", SDL_GetError()));
@@ -27,60 +31,54 @@ void Window::free() {
     SDL_Quit();
 }
 
-void Window::startLoop() {
-    quit = false;
-    SDL_Event e;
-    while (!quit) {
-        while (SDL_PollEvent(&e) != 0) {
-            switch (e.type)
+void Window::processEvents() {
+    while (SDL_PollEvent(&e) != 0) {
+        switch (e.type)
+        {
+        case SDL_EVENT_QUIT:
+            app.requestQuit();
+            break;
+
+        case SDL_EVENT_WINDOW_RESIZED:
+            resize(e.window.data1, e.window.data2);
+            break;
+
+        case SDL_EVENT_KEY_DOWN:
+            switch (e.key.key)
             {
-            case SDL_EVENT_QUIT:
-                quit = true;
+            case SDLK_ESCAPE:
+                app.requestQuit();
                 break;
-
-            case SDL_EVENT_WINDOW_RESIZED:
-                resize(e.window.data1, e.window.data2);
-                break;
-
-            case SDL_EVENT_KEY_DOWN:
-                switch (e.key.key)
-                {
-                case SDLK_ESCAPE:
-                    quit = true;
-                    break;
-
-                default:
-                    break;
-                }
 
             default:
                 break;
             }
+
+        default:
+            break;
         }
-
-        app.update();
-
-        app.draw();
-
-        SDL_GL_SwapWindow(window);
-        SDL_Delay(1);
     }
+}
+
+void Window::present() {
+    SDL_GL_SwapWindow(window);
+    SDL_Delay(1);
 }
 
 void Window::setTitle(const std::string& title) {
     SDL_SetWindowTitle(window, title.c_str());
 }
-/*
+
 void Window::setVirtualResolution(int width, int height) {
     virtualWidth = width;
     virtualHeight = height;
-    resize();
+    resize(this->width, this->height);
 }
 
 void Window::disableVirtualResolution() {
     virtualWidth = 0;
-    resize();
-}*/
+    resize(width, height);
+}
 
 void Window::resize(int newWidth, int newHeight) {
     width = newWidth;

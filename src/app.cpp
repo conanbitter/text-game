@@ -7,9 +7,23 @@ void App::run(int initialWidth, int initialHeight, const char* title) {
 
     load();
 
-    window.startLoop();
+    working = true;
+
+    while (working) {
+        window.processEvents();
+
+        update();
+
+        draw();
+
+        window.present();
+    }
 
     window.free();
+}
+
+void App::requestQuit() {
+    working = false;
 }
 
 void ShowError(const std::exception& e) {
