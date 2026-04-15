@@ -21,6 +21,9 @@ void Renderer::init() {
     glBindTexture(GL_TEXTURE_BUFFER, 0);
 
     glClearColor(0.6f, 0.7f, 0.8f, 1.0f);
+
+    basicShader.init();
+    sdfShader.init();
 }
 
 void Renderer::destroy() {

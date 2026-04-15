@@ -3,6 +3,10 @@
 #include <vector>
 #include "data.hpp"
 #include "glad/gl.h"
+#include "shaders.hpp"
+#include <limits>
+
+const GLuint MAX_GL_UINT = std::numeric_limits<GLuint>::max();
 
 #pragma pack(push, 1)
 union ExtraData
@@ -29,4 +33,10 @@ private:
     GLuint spriteBuffer;
     GLuint spriteTexture;
     std::vector<SpriteData> sprites;
+
+    BasicShader basicShader;
+    SDFShader sdfShader;
+
+    GLuint currentShader;
+    GLuint currentTexture;
 };
