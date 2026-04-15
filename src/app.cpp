@@ -15,9 +15,10 @@ void App::run(int initialWidth, int initialHeight, const char* title) {
 
         update();
 
+        renderer.beginDrawing();
         draw();
+        renderer.finishDrawing();
 
-        renderer.draw();
         window.present();
     }
 

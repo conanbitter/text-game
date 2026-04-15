@@ -27,7 +27,8 @@ public:
     ~Renderer();
     void init();
     void destroy();
-    void draw();
+    void beginDrawing();
+    void finishDrawing();
 private:
     GLuint vao;
     GLuint spriteBuffer;

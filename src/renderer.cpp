@@ -32,14 +32,23 @@ void Renderer::destroy() {
     glDeleteVertexArrays(1, &vao);
 }
 
-void Renderer::draw() {
+void Renderer::beginDrawing() {
     glBindVertexArray(vao);
     glBindBuffer(GL_TEXTURE_BUFFER, spriteBuffer);
     glBufferData(GL_TEXTURE_BUFFER, sizeof(SpriteData) * sprites.size(), sprites.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_TEXTURE_BUFFER, 0);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_BUFFER, spriteTexture);
-
     glClear(GL_COLOR_BUFFER_BIT);
-    glDrawArrays(GL_TRIANGLES, 0, 6 * sprites.size());
+
+    currentShader = MAX_GL_UINT;
+    currentTexture = MAX_GL_UINT;
+    sprites.clear();
+}
+
+void Renderer::finishDrawing() {
+    if (sprites.size() > 0) {
+        glDrawArrays(GL_TRIANGLES, 0, 6 * sprites.size());
+        sprites.clear();
+    }
 }
