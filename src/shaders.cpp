@@ -102,10 +102,6 @@ static GLuint compileShaderProgram(GLuint vertexShader, GLuint fragmentShader) {
     return program;
 };
 
-void ShaderProgram::use() {
-    glUseProgram(program);
-}
-
 ShaderProgram::~ShaderProgram() {
     if (glIsProgram(program)) {
         glDeleteProgram(program);

@@ -2,8 +2,10 @@
 
 #include <glad/gl.h>
 #include <string>
+#include "resources.hpp"
+#include <memory>
 
-class Texture {
+class Texture :public Resource {
 private:
     int width;
     int height;
@@ -11,16 +13,18 @@ private:
 
 public:
     Texture() : width{ 0 }, height{ 0 } {};
-    ~Texture();
-    void load(const char* filename);
-    void bind();
+    void load(const std::string& filename) override;
+    void destroy() override;
     void getSize(int& w, int& h) {
         w = width;
         h = height;
     }
+    GLuint getId() const { return handle; }
 
     Texture(const Texture& prog) = delete;
     Texture& operator=(const Texture& prog) = delete;
-    Texture(Texture&& prog);
-    Texture& operator=(Texture&& prog);
+    Texture(Texture&& prog) = delete;
+    Texture& operator=(Texture&& prog) = delete;
 };
+
+typedef std::shared_ptr<Texture> PTexture;

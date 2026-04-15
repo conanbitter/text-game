@@ -4,6 +4,7 @@
 #include "data.hpp"
 #include "glad/gl.h"
 #include "shaders.hpp"
+#include "textures.hpp"
 #include <limits>
 
 const GLuint MAX_GL_UINT = std::numeric_limits<GLuint>::max();
@@ -29,6 +30,10 @@ public:
     void destroy();
     void beginDrawing();
     void finishDrawing();
+    void setTexture(const std::shared_ptr<Texture>& texture);
+
+    void setBasicShader();
+    void setSdfShader();
 private:
     GLuint vao;
     GLuint spriteBuffer;
@@ -40,4 +45,6 @@ private:
 
     GLuint currentShader;
     GLuint currentTexture;
+
+    void setShader(const ShaderProgram& shader);
 };

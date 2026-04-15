@@ -3,7 +3,7 @@
 
 class ShaderProgram {
 public:
-    void use();
+    GLuint getId() const { return program; }
     virtual void init() {}
 
     ~ShaderProgram();

@@ -52,3 +52,29 @@ void Renderer::finishDrawing() {
         sprites.clear();
     }
 }
+
+void Renderer::setTexture(const std::shared_ptr<Texture>& texture) {
+    GLuint newId = texture->getId();
+    if (currentTexture != newId) finishDrawing();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, newId);
+
+    currentTexture = newId;
+}
+
+void Renderer::setBasicShader() {
+    setShader(basicShader);
+}
+
+void Renderer::setSdfShader() {
+    setShader(sdfShader);
+}
+
+void Renderer::setShader(const ShaderProgram& shader) {
+    GLuint newId = shader.getId();
+    if (currentShader != newId) finishDrawing();
+
+    glUseProgram(newId);
+    currentShader = newId;
+}

@@ -23,6 +23,9 @@ set(SRC_FILES
     renderer.hpp
     renderer.cpp
 
+    resources.hpp
+    resources.cpp
+
     app.hpp
     app.cpp
 )

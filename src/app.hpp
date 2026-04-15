@@ -2,6 +2,7 @@
 
 #include "window.hpp"
 #include "renderer.hpp"
+#include "resources.hpp"
 
 class App {
 public:
@@ -13,9 +14,10 @@ public:
     void run(int initialWidth, int initialHeight, const char* title);
     void requestQuit();
 
-private:
+protected:
     Window window;
     Renderer renderer;
+    ResourceManager res;
     bool working;
 };
 
