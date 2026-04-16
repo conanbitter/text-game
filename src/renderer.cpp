@@ -32,7 +32,22 @@ void Renderer::destroy() {
     glDeleteVertexArrays(1, &vao);
 }
 
+void Renderer::updateViewport(float xOffset, float yOffset, float width, float height, float scale) {
+    setShader(basicShader);
+    basicShader.setViewport(xOffset, yOffset, width, height);
+
+    setShader(sdfShader);
+    sdfShader.setViewport(xOffset, yOffset, width, height);
+    sdfShader.setScale(scale);
+}
+
 void Renderer::beginDrawing() {
+    currentShader = MAX_GL_UINT;
+    currentTexture = MAX_GL_UINT;
+    sprites.clear();
+}
+
+void Renderer::finishDrawing() {
     glBindVertexArray(vao);
     glBindBuffer(GL_TEXTURE_BUFFER, spriteBuffer);
     glBufferData(GL_TEXTURE_BUFFER, sizeof(SpriteData) * sprites.size(), sprites.data(), GL_DYNAMIC_DRAW);
@@ -41,12 +56,6 @@ void Renderer::beginDrawing() {
     glBindTexture(GL_TEXTURE_BUFFER, spriteTexture);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    currentShader = MAX_GL_UINT;
-    currentTexture = MAX_GL_UINT;
-    sprites.clear();
-}
-
-void Renderer::finishDrawing() {
     if (sprites.size() > 0) {
         glDrawArrays(GL_TRIANGLES, 0, 6 * sprites.size());
         sprites.clear();
@@ -55,12 +64,14 @@ void Renderer::finishDrawing() {
 
 void Renderer::setTexture(const std::shared_ptr<Texture>& texture) {
     GLuint newId = texture->getId();
-    if (currentTexture != newId) finishDrawing();
+    if (currentTexture != newId) {
+        finishDrawing();
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, newId);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, newId);
 
-    currentTexture = newId;
+        currentTexture = newId;
+    }
 }
 
 void Renderer::setBasicShader() {
@@ -71,10 +82,24 @@ void Renderer::setSdfShader() {
     setShader(sdfShader);
 }
 
+void Renderer::draw(PTexture tex, float x, float y) {
+    setShader(basicShader);
+    setTexture(tex);
+    int w, h;
+    tex->getSize(w, h);
+    sprites.push_back(SpriteData{
+        .dst = Rect{.x = x,.y = y,.w = (float)w,.h = (float)h},
+        .src = Rect{.x = 0,.y = 0,.w = (float)w, .h = (float)h},
+        .color = Color{.r = 1.0, .g = 1.0, .b = 1.0, .a = 1.0},
+        });
+}
+
 void Renderer::setShader(const ShaderProgram& shader) {
     GLuint newId = shader.getId();
-    if (currentShader != newId) finishDrawing();
+    if (currentShader != newId) {
+        finishDrawing();
 
-    glUseProgram(newId);
-    currentShader = newId;
+        glUseProgram(newId);
+        currentShader = newId;
+    }
 }

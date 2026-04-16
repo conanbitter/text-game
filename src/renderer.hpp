@@ -28,12 +28,15 @@ public:
     ~Renderer();
     void init();
     void destroy();
+    void updateViewport(float xOffset, float yOffset, float width, float height, float scale);
     void beginDrawing();
     void finishDrawing();
-    void setTexture(const std::shared_ptr<Texture>& texture);
 
+    void setTexture(const std::shared_ptr<Texture>& texture);
     void setBasicShader();
     void setSdfShader();
+
+    void draw(PTexture tex, float x, float y);
 private:
     GLuint vao;
     GLuint spriteBuffer;

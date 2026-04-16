@@ -13,6 +13,7 @@ public:
 
     void run(int initialWidth, int initialHeight, const char* title);
     void requestQuit();
+    void updateViewport(float xOffset, float yOffset, float width, float height, float scale);
 
 protected:
     Window window;

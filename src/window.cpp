@@ -34,7 +34,8 @@ void Window::init(int width, int height, const char* title) {
     SDL_Log("Using OpenGL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 #endif
 
-    resize(width, height);
+    this->width = width;
+    this->height = height;
 }
 
 void Window::destroy() {
@@ -92,7 +93,37 @@ void Window::disableVirtualResolution() {
     resize(width, height);
 }
 
+void Window::updateSize() {
+    resize(width, height);
+}
+
 void Window::resize(int newWidth, int newHeight) {
     width = newWidth;
     height = newHeight;
+
+    glViewport(0, 0, newWidth, newHeight);
+
+    if (virtualWidth == 0) {
+        app.updateViewport(0.0f, 0.0f, newWidth, newHeight, 1.0f);
+    } else {
+        float xOffset = 0.0f;
+        float yOffset = 0.0f;
+        float scale = 1.0f;
+
+        float windowAR = (float)newWidth / newHeight;
+        float virtualAR = (float)virtualWidth / virtualHeight;
+
+        if (virtualAR < windowAR) {
+            float realWidth = virtualHeight * windowAR;
+            xOffset = (realWidth - virtualWidth) / 2.0f;
+            scale = (float)newHeight / virtualHeight;
+        }
+        if (virtualAR > windowAR) {
+            float realHeight = virtualWidth / windowAR;
+            yOffset = (realHeight - virtualHeight) / 2.0f;
+            scale = (float)newWidth / virtualWidth;
+        }
+
+        app.updateViewport(xOffset, yOffset, virtualWidth, virtualHeight, scale);
+    }
 }

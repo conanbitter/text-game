@@ -16,6 +16,7 @@ public:
     void setTitle(const std::string& title);
     void setVirtualResolution(int width, int height);
     void disableVirtualResolution();
+    void updateSize();
 
 private:
     void resize(int newWidth, int newHeight);

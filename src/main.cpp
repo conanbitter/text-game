@@ -7,17 +7,12 @@ class MyApp :public App {
 public:
     void load() override {
         tex = res.get<Texture>("assets/bitmap.png");
-        int w, h;
-        tex->getSize(w, h);
-        SDL_Log("Tex1 size: %d x %d", w, h);
-        PTexture tex2 = res.get<Texture>("assets/bitmap.png");
-        tex2->getSize(w, h);
-        SDL_Log("Tex2 size: %d x %d", w, h);
+        window.setVirtualResolution(800, 600);
     }
 
     void draw() override {
-        renderer.setBasicShader();
-        renderer.setTexture(tex);
+        renderer.draw(tex, 10, 10);
+        renderer.draw(tex, 300, 10);
     }
 private:
     PTexture tex;
