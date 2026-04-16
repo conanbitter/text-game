@@ -50,7 +50,14 @@ void Renderer::beginDrawing() {
 void Renderer::finishDrawing() {
     glBindVertexArray(vao);
     glBindBuffer(GL_TEXTURE_BUFFER, spriteBuffer);
-    glBufferData(GL_TEXTURE_BUFFER, sizeof(SpriteData) * sprites.size(), sprites.data(), GL_DYNAMIC_DRAW);
+
+    if (sprites.size() > maxSpriteBufferSize) {
+        glBufferData(GL_TEXTURE_BUFFER, sizeof(SpriteData) * sprites.size(), sprites.data(), GL_DYNAMIC_DRAW);
+        maxSpriteBufferSize = sprites.size();
+    } else {
+        glBufferSubData(GL_TEXTURE_BUFFER, 0, sizeof(SpriteData) * sprites.size(), sprites.data());
+    }
+
     glBindBuffer(GL_TEXTURE_BUFFER, 0);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_BUFFER, spriteTexture);

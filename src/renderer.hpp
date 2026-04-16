@@ -42,6 +42,7 @@ private:
     GLuint spriteBuffer;
     GLuint spriteTexture;
     std::vector<SpriteData> sprites;
+    size_t maxSpriteBufferSize = 0;
 
     BasicShader basicShader;
     SDFShader sdfShader;
