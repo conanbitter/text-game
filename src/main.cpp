@@ -2,6 +2,7 @@
 #include "app.hpp"
 #include "textures.hpp"
 #include <SDL3/SDL.h>
+#include "datafile.hpp"
 
 class MyApp :public App {
 public:
@@ -20,6 +21,8 @@ private:
 
 int main(int argc, char* argv[]) {
     try {
+        DataFile test("assets/font.fnt", "FONT"_c, 1);
+        SDL_Log("Texture \"%s\"", test.readStr("IMAG"_c).c_str());
         MyApp app;
         app.run(800, 600, "TAF");
     }

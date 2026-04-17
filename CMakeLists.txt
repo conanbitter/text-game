@@ -28,6 +28,9 @@ set(SRC_FILES
 
     app.hpp
     app.cpp
+
+    datafile.hpp
+    datafile.cpp
 )
 
 set(SDL_VULKAN OFF CACHE BOOL "" FORCE)
