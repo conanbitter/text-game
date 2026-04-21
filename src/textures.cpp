@@ -4,12 +4,26 @@
 #include "textures.hpp"
 #include <stdexcept>
 #include <format>
+#include "SDL3/SDL.h"
 
 void Texture::destroy() {
+    destroyTexture();
+    Resource::destroy();
+}
+
+void Texture::destroyTexture() {
+    if (!valid) return;
     if (glIsTexture(handle)) {
         glDeleteTextures(1, &handle);
     }
     valid = false;
+#ifdef DEBUG        
+    SDL_Log("Texture (id %d) destroyed", handle);
+#endif
+}
+
+Texture::~Texture() {
+    destroyTexture();
 }
 
 void Texture::load(const std::string& filename) {
@@ -38,5 +52,8 @@ void Texture::load(const std::string& filename) {
     width = w;
     height = h;
     valid = true;
+#ifdef DEBUG        
+    SDL_Log("Texture \"%s\" (id %d) loaded", filename.c_str(), handle);
+#endif
 }
 

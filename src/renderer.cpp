@@ -45,10 +45,13 @@ void Renderer::beginDrawing() {
     currentShader = MAX_GL_UINT;
     currentTexture = MAX_GL_UINT;
     sprites.clear();
+    glBindVertexArray(vao);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Renderer::finishDrawing() {
-    glBindVertexArray(vao);
+    if (sprites.empty()) return;
+
     glBindBuffer(GL_TEXTURE_BUFFER, spriteBuffer);
 
     if (sprites.size() > maxSpriteBufferSize) {
@@ -61,24 +64,28 @@ void Renderer::finishDrawing() {
     glBindBuffer(GL_TEXTURE_BUFFER, 0);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_BUFFER, spriteTexture);
-    glClear(GL_COLOR_BUFFER_BIT);
 
-    if (sprites.size() > 0) {
-        glDrawArrays(GL_TRIANGLES, 0, 6 * sprites.size());
-        sprites.clear();
+    glDrawArrays(GL_TRIANGLES, 0, 6 * sprites.size());
+    sprites.clear();
+}
+
+void Renderer::setTextureById(GLuint id) {
+    if (currentTexture != id) {
+        finishDrawing();
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, id);
+
+        currentTexture = id;
     }
 }
 
 void Renderer::setTexture(const std::shared_ptr<Texture>& texture) {
-    GLuint newId = texture->getId();
-    if (currentTexture != newId) {
-        finishDrawing();
+    setTextureById(texture->getId());
+}
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, newId);
-
-        currentTexture = newId;
-    }
+void Renderer::setTexture(const std::shared_ptr<ITextureContainer>& textureContainer) {
+    setTextureById(textureContainer->gerTextureId());
 }
 
 void Renderer::setBasicShader() {

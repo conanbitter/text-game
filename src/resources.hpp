@@ -4,13 +4,14 @@
 #include <memory>
 #include <unordered_map>
 #include <filesystem>
+#include "SDL3/SDL.h"
 
 class Resource {
 public:
     virtual void load(const std::string& filename) {}
-    virtual void destroy() {}
+    virtual void destroy();
     bool isValid() { return valid; }
-    ~Resource() { destroy(); };
+    virtual ~Resource() {};
 
 protected:
     bool valid;

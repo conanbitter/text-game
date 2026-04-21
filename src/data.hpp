@@ -23,3 +23,8 @@ struct FontData {
 };
 
 #pragma pack(pop)
+
+struct Point {
+    float x;
+    float y;
+};

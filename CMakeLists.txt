@@ -17,6 +17,9 @@ set(SRC_FILES
     textures.hpp
     textures.cpp
 
+    font.hpp
+    font.cpp
+
     window.hpp
     window.cpp
 

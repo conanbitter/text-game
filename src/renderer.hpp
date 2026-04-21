@@ -33,6 +33,7 @@ public:
     void finishDrawing();
 
     void setTexture(const std::shared_ptr<Texture>& texture);
+    void setTexture(const std::shared_ptr<ITextureContainer>& textureContainer);
     void setBasicShader();
     void setSdfShader();
 
@@ -51,4 +52,5 @@ private:
     GLuint currentTexture;
 
     void setShader(const ShaderProgram& shader);
+    void setTextureById(GLuint id);
 };
